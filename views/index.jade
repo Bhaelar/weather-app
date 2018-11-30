@@ -1,0 +1,128 @@
+doctype html
+html.
+	<head meta name="viewport" content="initial-scale=1">
+	<title>Weather app</title>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+	<script>
+	$(document).ready(function() {
+		var lon;
+		var lat;
+		var weatherType;
+		
+		var celsius;
+		var fahr;
+		if(navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(function(position) {
+				
+
+				lon = position.coords.longitude;
+				lat = position.coords.latitude;
+				
+				var api = "https://fcc-weather-api.glitch.me/api/current?lat="+lat+"&lon="+lon;
+				//$(".link").html(api);
+				$.getJSON(api, function(data) {
+					weatherType = data.weather[0].description;
+					celsius = data.main.temp;
+					var windSpeed = data.wind.speed;
+					var city = data.name;
+					var country = data.sys.country;
+					fahr = (celsius * (9/5)) + 32;
+					$(".temp").html(celsius.toFixed(0));
+					$(".unit").html(" <sup>o</sup>C");
+					//$("#data").html("weatherType: " + weatherType + "<br>city: " + city + "<br>api: " + api);
+					$(".city").html(city + ",");
+					$(".country").html(country);
+					$(".description").html(weatherType.toUpperCase());
+
+				});
+			});
+		}
+		$(".extra").html("<br>Click the unit to toggle between <sup>o</sup>C and <sup>o</sup>F");
+		
+		
+		$(".unit").click(function() {
+			
+			if($(".unit").html() === " <sup>o</sup>C") {
+				$(".temp").html(fahr.toFixed(1));
+				$(".unit").html(" <sup>o</sup>F");
+			} else {
+				$(".temp").html(celsius.toFixed(0));
+				$(".unit").html(" <sup>o</sup>C");
+			}
+		});
+		
+	});
+	</script>
+	<style>
+		body {
+			margin: auto;
+			background-color: #F8F8FE;
+			font-family: Palatino,Helvetica,Arial;
+			text-align: center;
+			color: #231D22;
+
+		}
+		h1 {
+			padding: 30px 0px 0px 0px;
+			font-size: 5vw;
+		}
+		#info {
+			font-size: 5vw;
+			margin: auto;
+		}
+		li {
+			padding: 30px 0px;
+			font-size: 4vw;
+		}
+		button {
+			border: none;
+			background-color: #F8F8FE;
+			outline: none; 
+			font-size: 3.9vw;
+			color: #1C29D8;
+		}
+		ul {
+			list-style: none;
+			text-align: center;
+			margin: auto;
+		} 
+		a {
+			text-decoration: none;
+		}
+		a:link {
+			color: #1C29D8;
+		}
+		a:visited {
+			color: #1C29D8;
+		}
+		a:hover {
+			color: #1C29D8;
+		}
+		footer {
+			font-size: 1.8vw;
+			padding: 30px 0px 30px 0px;
+			text-align: center;
+			margin: auto;
+		} 
+		.extra {
+		font-size: 1.8vw;
+		
+		}
+	</style>
+	</head>
+	<body> 
+	<div id="main">
+		<h1>A Simple Local Weather App<h1>
+	</div>
+	<div id="info">
+		<ul>
+			<li><span class="city"></span> <span class="country"></span></li>
+			<li> <span class="temp"></span><button class="unit"></button><span class="extra"></span> </li>
+			<li> <span class="description"></span> </li>
+		</ul>
+	</div>
+	<p class="link"></p>
+	<footer>
+	Built by <a href="https://github.com/Bhaelar" target="_blank">Bhaelar</a>.
+	</footer>
+	</body>
